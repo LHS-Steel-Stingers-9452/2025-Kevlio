@@ -75,7 +75,7 @@ private final SysIdRoutine m_sysIdRoutine =
             .withGravityType(GravityTypeValue.Arm_Cosine)
             .withKA(0.53584)
             .withKG(0.397)
-            .withKP(1.0)
+            .withKP(1.6)
             .withKS(0.16558)
             .withKV(1.6063);
 
@@ -114,6 +114,11 @@ private final SysIdRoutine m_sysIdRoutine =
     return runOnce(() -> {
         armKraken.setPosition(0.37);
     });
+  }
+
+  public void defaultArmEncoder(){
+    armKraken.setPosition(0.37);
+
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {

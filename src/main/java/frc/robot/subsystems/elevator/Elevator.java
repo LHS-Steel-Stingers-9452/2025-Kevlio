@@ -105,6 +105,11 @@ private final SysIdRoutine m_sysIdRoutine =
     });
     }
 
+    public void defaultElevatorEncoder(){
+        elevatorKraken.setPosition(0);
+
+    }
+
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
         return m_sysIdRoutine.quasistatic(direction);
      }

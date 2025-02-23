@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class FunnelPivot extends SubsystemBase {
 
     
-    private final TalonFX  pivotKraken = new TalonFX(0);
+    private final TalonFX  pivotKraken = new TalonFX(9);
     
     public FunnelPivot() {
 
@@ -39,9 +39,11 @@ public class FunnelPivot extends SubsystemBase {
     }
    
 
-    public void stopPivot() {
-        pivotKraken.set(0);
-    }
+    public Command stopPivot() {
+        return runOnce(() -> {
+            pivotKraken.set(0);
+        });
+        }
 
     public Command runPivot(double speed){
         return run(() -> {

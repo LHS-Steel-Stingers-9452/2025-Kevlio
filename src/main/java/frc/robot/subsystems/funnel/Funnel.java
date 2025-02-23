@@ -39,8 +39,10 @@ public class Funnel extends SubsystemBase{
     }
    
 
-    public void stopFunnel() {
+    public Command stopFunnel() {
+     return runOnce(() -> {
         funnelKraken.set(0);
+    });
     }
 
     public Command runFunnel(double speed){

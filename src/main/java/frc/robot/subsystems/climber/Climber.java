@@ -36,11 +36,16 @@ public class Climber extends SubsystemBase {
             
         
         climberKraken.getConfigurator().apply(talonFXConfig);
+
+        setDefaultCommand(stopClimber());
     }
    
 
-    public void stopClimber() {
-        climberKraken.set(0);
+    public Command stopClimber() {
+        return runOnce(() -> {
+            climberKraken.set(0);
+        });
+       
     }
 
     public Command runClimber(double speed){

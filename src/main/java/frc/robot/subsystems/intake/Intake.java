@@ -34,8 +34,8 @@ public class Intake extends SubsystemBase {
 
         var currentLimitConfig =
             new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(100)
-                .withSupplyCurrentLimit(50)
+                .withStatorCurrentLimit(40)
+                .withSupplyCurrentLimit(30)
                 .withStatorCurrentLimitEnable(true)
                 .withSupplyCurrentLimitEnable(true);
 
@@ -46,11 +46,15 @@ public class Intake extends SubsystemBase {
             
         
         intakeKraken.getConfigurator().apply(talonFXConfig);
+
+        setDefaultCommand(stopIntake());
     }
    
 
-    public void stopIntake() {
-        intakeKraken.set(0);
+    public Command stopIntake() {
+        return runOnce(() -> {
+          intakeKraken.set(0);
+         });
     }
 
     public Command runIntake(double speed){

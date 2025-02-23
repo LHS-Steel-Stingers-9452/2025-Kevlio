@@ -24,6 +24,7 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.funnel.Funnel;
+import frc.robot.subsystems.funnel.FunnelPivot;
 import frc.robot.subsystems.intake.Intake;
 
 @Logged
@@ -65,6 +66,8 @@ public class RobotContainer {
 
   public final Funnel funnel = new Funnel();
 
+  public final FunnelPivot funnelPivot = new FunnelPivot();
+
   private final SwerveRequest.RobotCentric robotRelativeDrive =
       new SwerveRequest.RobotCentric()
           .withDeadband(MaxSpeed * 0.1)
@@ -105,14 +108,6 @@ public class RobotContainer {
     SmartDashboard.putData("algae L3", CommandManager.setPositions(arm, elevator, -0.16 , 2.8));
     SmartDashboard.putData("intakeAlgae", intake.runIntake(-0.2));
 
-
-
-
-
-
-     
-
-    
     // Note that X is defined as forward according to WPILib convention,
     // and Y is defined as to the left according to WPILib convention.
 
@@ -130,7 +125,6 @@ public class RobotContainer {
                             * MaxAngularRate) // Drive counterclockwise with negative X (left)
             ));
 
-    joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
     joystick
         .b()
         .whileTrue(
@@ -147,21 +141,40 @@ public class RobotContainer {
       // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-    joystick.a().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 1));
+    // Algae L2 intake
+    joystick.a().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 1.5));
 
+    // Algae L3 intake
+    joystick.b().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 3.0));
 
+    //stop intake
+    joystick.povLeft().onTrue(intake.runIntake(0));
+
+    //climb up 
+    joystick.rightBumper().whileTrue(climber.runClimber(0.3));
+
+    //climb down
+    joystick.rightTrigger().whileTrue(climber.runClimber(-0.3));
 
     //operator bindings
 
     //auto coral intake
     operator.povDown().onTrue(CommandManager.intakeCoral(funnel, intake));
 
-    // algae intake
-    operator.rightTrigger().onTrue(intake.runIntake(-0.4));
+    //hold algae pose
+    operator.povLeft().onTrue(CommandManager.setPositions(arm, elevator, 0.1 , 0.1 ));
 
-    //hold algae
+    //pivot funnel for climb 
+    operator.povRight().onTrue(CommandManager.movePivot(funnelPivot));
+    //score net
+    operator.povUp().onTrue(CommandManager.netPosition(elevator, arm));
+
+    // algae intake
+    operator.rightTrigger().onTrue(intake.runIntake(-0.6));
+
     
-    operator.a().onTrue(intake.runIntake(-0.3));
+    // hold algae speed
+    operator.a().onTrue(intake.runIntake(-0.5));
 
     //algae outtake
     operator.rightBumper().whileTrue(intake.runIntake(1));
@@ -173,14 +186,13 @@ public class RobotContainer {
     operator.y().onTrue(CommandManager.setPositions(arm, elevator, 0.30 , 2.5));
     
     // Score L4
-    operator.x().onTrue(CommandManager.setPositions(arm, elevator, 0.26 , 4.9)); //0.23 5.1
+    operator.x().onTrue(CommandManager.setPositions(arm, elevator, 0.28 , 5.2)); //0.23 5.1
     
-    // intake and default poses
-    operator.leftBumper().onTrue(CommandManager.intakePositions(arm, elevator));
+    // default arm (intake position)
+    operator.leftBumper().onTrue(CommandManager.defaultArm(arm));
 
-   // operator.leftTrigger().onTrue(CommandManager.setPositions(arm, elevator, 0.30, 0.15));
-
-   operator.leftTrigger().onTrue(CommandManager.defaultPositions(arm, elevator, intake));
+    //default elevator w/ arm out of the way
+   operator.leftTrigger().onTrue(CommandManager.setPositions(arm, elevator, 0.25, 0.1));
     
 
 
@@ -226,7 +238,12 @@ public class RobotContainer {
         }
     }));
   }
-
+ 
+  public void autoInit(){
+    drivetrain.seedFieldCentric();
+    arm.defaultArmEncoder();
+    elevator.defaultElevatorEncoder();
+  }
   // simple proportional turning control with Limelight.
   // "proportional control" is a control algorithm in which the output is proportional to the error.
   // in this case, we are going to return an angular velocity that is proportional to the
