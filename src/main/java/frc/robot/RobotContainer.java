@@ -204,7 +204,8 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
 
 
-    //slow button doesn't work YET
+   
+    //slow button that DOES WORK (in theory)
     joystick
         .leftBumper()
         .whileTrue(
@@ -220,7 +221,7 @@ public class RobotContainer {
                         *MaxAngularRate)
                                   
                 ));
-           
+            
          
 
 
