@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentric;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.epilogue.Logged;
@@ -145,16 +146,16 @@ public class RobotContainer {
     joystick.a().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 1.5));
 
     // Algae L3 intake
-    joystick.b().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 3.0));
+    joystick.y().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 3.0));
 
     //stop intake
-    joystick.povLeft().onTrue(intake.runIntake(0));
+    //joystick.povLeft().onTrue(intake.runIntake(0));
 
     //climb up 
-    joystick.rightBumper().whileTrue(climber.runClimber(0.3));
+    joystick.povUp().whileTrue(climber.runClimber(0.3));
 
     //climb down
-    joystick.rightTrigger().whileTrue(climber.runClimber(-0.3));
+    joystick.povDown().whileTrue(climber.runClimber(-0.3));
 
     //operator bindings
 
@@ -169,8 +170,8 @@ public class RobotContainer {
     //score net
     operator.povUp().onTrue(CommandManager.netPosition(elevator, arm));
 
-    // algae intake
-    operator.rightTrigger().onTrue(intake.runIntake(-0.6));
+    // algae intake| coral outtake
+    operator.rightTrigger().whileTrue(intake.runIntake(-0.6));
 
     
     // hold algae speed
@@ -181,12 +182,12 @@ public class RobotContainer {
     
 
     // score L2
-    operator.b().onTrue(CommandManager.setPositions(arm, elevator, 0.30 , 1.0));
+    operator.x().onTrue(CommandManager.setPositions(arm, elevator, 0.30 , 1.0));
     // score L3
     operator.y().onTrue(CommandManager.setPositions(arm, elevator, 0.30 , 2.5));
     
     // Score L4
-    operator.x().onTrue(CommandManager.setPositions(arm, elevator, 0.28 , 5.2)); //0.23 5.1
+    operator.b().onTrue(CommandManager.setPositions(arm, elevator, 0.28 , 5.2)); //0.23 5.1
     
     // default arm (intake position)
     operator.leftBumper().onTrue(CommandManager.defaultArm(arm));
@@ -201,6 +202,27 @@ public class RobotContainer {
     
 
     drivetrain.registerTelemetry(logger::telemeterize);
+
+
+    //slow button doesn't work YET
+  /*  joystick
+        .leftBumper()
+        .whileTrue(
+            drivetrain.applyRequest(
+                () -> 
+                drive
+                .withVelocityX(
+                   (-joystick.getLeftY() * MaxSpeed).times(.25)) 
+                .withVelocityY(
+                    (-joystick.getLeftX() * MaxSpeed).times(.25))
+                .withRotationalRate(
+                    -joystick.getRightX()
+                        *MaxAngularRate)
+                                  
+                ));
+   */         
+         
+
 
 // vision bindings
 
@@ -225,8 +247,9 @@ public class RobotContainer {
                       .withRotationalRate(
                           rotation); // Drive counterclockwise with negative X (left)
                 }));
+            }
 
-
+/* 
     joystick.leftTrigger().whileTrue(drivetrain.applyRequest(() -> {
         double aprilTagID = limelightMoveForeward();
         SmartDashboard.putNumber("aprilTagID", aprilTagID);
@@ -238,6 +261,7 @@ public class RobotContainer {
         }
     }));
   }
+  */
  
   public void autoInit(){
     drivetrain.seedFieldCentric();
