@@ -205,22 +205,22 @@ public class RobotContainer {
 
 
     //slow button doesn't work YET
-  /*  joystick
+    joystick
         .leftBumper()
         .whileTrue(
             drivetrain.applyRequest(
                 () -> 
                 drive
                 .withVelocityX(
-                   (-joystick.getLeftY() * MaxSpeed).times(.25)) 
+                   (-joystick.getLeftY() * MaxSpeed)*(.25)) 
                 .withVelocityY(
-                    (-joystick.getLeftX() * MaxSpeed).times(.25))
+                    (-joystick.getLeftX() * MaxSpeed)*(.25))
                 .withRotationalRate(
                     -joystick.getRightX()
                         *MaxAngularRate)
                                   
                 ));
-   */         
+           
          
 
 
