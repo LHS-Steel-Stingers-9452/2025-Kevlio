@@ -10,6 +10,7 @@ import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelPivot;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class CommandManager {
 
@@ -32,52 +33,53 @@ public class CommandManager {
              );   
     }
 
-public static Command intakePositions(Arm arm, Elevator elevator) {
-   // return arm.setPosition(0.36).alongWith(elevator.runElevator(0));
-   // return arm.runArm(0.1).alongWith(elevator.runElevator(0)).withTimeout(0.5);
-    return arm.runArm(0.1).withTimeout(0.5).andThen(elevator.runElevator(0)).andThen(arm.runArm(0));
-}
+    public static Command intakePositions(Arm arm, Elevator elevator) {
+    // return arm.setPosition(0.36).alongWith(elevator.runElevator(0));
+    // return arm.runArm(0.1).alongWith(elevator.runElevator(0)).withTimeout(0.5);
+        return arm.runArm(0.1).withTimeout(0.5).andThen(elevator.runElevator(0)).andThen(arm.runArm(0));
+    }
 
-public static Command defaultPositions(Arm arm, Elevator elevator, Intake intake) {
-    return setPositions(arm, elevator, 0.30, 0.15)
-    .alongWith(intake.runIntake(0));
+    public static Command defaultPositions(Arm arm, Elevator elevator, Intake intake) {
+        return setPositions(arm, elevator, 0.30, 0.15)
+        .alongWith(intake.runIntake(0));
+    }
 
-}
+    public static Command defaultArm(Arm arm){
+        return arm.runArm(0.1)
+        .until(()-> arm.armPosition() < 0.37 && arm.armPosition() > 0.36)
+        .andThen(arm.runArm(0));
+    }
 
-public static Command defaultArm(Arm arm){
-    return arm.runArm(0.1)
-    .until(()-> arm.armPosition() < 0.37 && arm.armPosition() > 0.36)
-    .andThen(arm.runArm(0));
-    
+    public static Command defaultElevator(Elevator elevator){
+        return elevator.setPosition(0.1);
+    //  .until(()-> elevator.elevatorPosition() <0.2)
+        //.andThen(elevator.runElevator(0).withTimeout(0.5));
+    }
 
-}
+    public static Command netPosition(Elevator elevator, Arm arm){
+        return elevator.setPosition(5.3)
+        .until(()-> elevator.elevatorPosition() > 5.2)
+        .andThen(
+            elevator.setPosition(6)
+        .alongWith(arm.setPosition(0.27))
+        
+        );  
 
-public static Command defaultElevator(Elevator elevator){
-    return elevator.setPosition(0.1);
-  //  .until(()-> elevator.elevatorPosition() <0.2)
-    //.andThen(elevator.runElevator(0).withTimeout(0.5));
-}
+    }
+    public static Command movePivot(FunnelPivot funnelPivot){
+        return funnelPivot.runPivot(-0.34)
+        .withTimeout(0.5)
+        .andThen(funnelPivot.runPivot(0));
+    }
 
-public static Command netPosition(Elevator elevator, Arm arm){
-    return elevator.setPosition(5.3)
-    .until(()-> elevator.elevatorPosition() > 5.2)
-    .andThen(
-        elevator.setPosition(6)
-     .alongWith(arm.setPosition(0.27))
-     
-     );  
+    public static Command climberClimb(Climber climber){
+        return climber.runClimber(0.1);
+        // .finallyDo(climber.stopClimber())
 
-}
-public static Command movePivot(FunnelPivot funnelPivot){
-    return funnelPivot.runPivot(-0.34)
-    .withTimeout(0.5)
-    .andThen(funnelPivot.runPivot(0));
-}
-
-public static Command climberClimb(Climber climber){
-    return climber.runClimber(0.1);
-    // .finallyDo(climber.stopClimber())
-
-}
-
+    }
+    /* 
+    public static Command dumbAuto(CommandSwerveDrivetrain commandswervedrivetrain){
+        return commandswervedrivetrain.drive
+    }
+    */
 }
