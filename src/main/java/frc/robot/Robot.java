@@ -86,16 +86,6 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /*  Command getAutonomousCommand(){
-    return 
-      drivetrain.applyRequest(() ->
-        drive.withVelocityX(0.5)
-        .withVelocityY(0)
-        .withRotationalRate(0))
-        .withTimeout(3)
-        .andThen(drivetrain.applyRequest(() -> idle));
-  }
-  */
 
   @Override
   public void autonomousPeriodic() {}
