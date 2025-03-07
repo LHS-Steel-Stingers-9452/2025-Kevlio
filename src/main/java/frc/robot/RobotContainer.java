@@ -114,6 +114,8 @@ public class RobotContainer {
     // Note that X is defined as forward according to WPILib convention,
     // and Y is defined as to the left according to WPILib convention.
 
+//joystick/driver bindings
+
     drivetrain.setDefaultCommand(
         // Drivetrain will execute this command periodically
         drivetrain.applyRequest(
@@ -128,6 +130,8 @@ public class RobotContainer {
                             * MaxAngularRate) // Drive counterclockwise with negative X (left)
             ));
 
+        
+
     joystick
         .b()
         .whileTrue(
@@ -141,7 +145,7 @@ public class RobotContainer {
     // joystick.y().whileTrue(elevator.sysIdQuasistatic(Direction.kForward));
     // joystick.a().whileTrue(elevator.sysIdQuasistatic(Direction.kReverse));return 
 
-      // reset the field-centric heading on left bumper press
+      // reset the field-centric heading on right bumper press // changed 2/25 from left bumper to right bumper
     joystick.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
     // Algae L2 intake
@@ -162,7 +166,7 @@ public class RobotContainer {
     //climb down
     joystick.povDown().whileTrue(climber.runClimber(-1));
 
-    //operator bindings
+//operator bindings
 
     //auto coral intake
     operator.povDown().onTrue(CommandManager.intakeCoral(funnel, intake));
@@ -213,7 +217,7 @@ public class RobotContainer {
 
 
    
-    //slow button that DOES WORK (in theory)
+//slow button that DOES WORK (in theory), driver
     joystick
         .leftBumper()
         .whileTrue(
@@ -229,34 +233,31 @@ public class RobotContainer {
                         *MaxAngularRate)
                                   
                 ));
-            
-         
 
+// vision bindings, for driver
 
-// vision bindings
+    //lock onto april tag
+        joystick
+            .rightTrigger()
+            .whileTrue(
+                drivetrain.applyRequest(
+                    () -> {
+                    double rotation = limelight_aim_proportional();
+                    double xSpeed = limelight_range_proportional();
 
-//lock onto april tag
-    joystick
-        .rightTrigger()
-        .whileTrue(
-            drivetrain.applyRequest(
-                () -> {
-                  double rotation = limelight_aim_proportional();
-                  double xSpeed = limelight_range_proportional();
+                    SmartDashboard.putNumber("xSpeed", xSpeed);
+                    SmartDashboard.putNumber("rotation", rotation);
 
-                  SmartDashboard.putNumber("xSpeed", xSpeed);
-                  SmartDashboard.putNumber("rotation", rotation);
-
-                  return robotRelativeDrive
-                      .withVelocityX(
-                          -joystick.getLeftY()
-                              * MaxSpeed) // Drive forward with negative Y (forward)
-                      .withVelocityY(
-                          -joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                      .withRotationalRate(
-                          rotation); // Drive counterclockwise with negative X (left)
-                }));
-            }
+                    return robotRelativeDrive
+                        .withVelocityX(
+                            -joystick.getLeftY()
+                                * MaxSpeed) // Drive forward with negative Y (forward)
+                        .withVelocityY(
+                            -joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        .withRotationalRate(
+                            rotation); // Drive counterclockwise with negative X (left)
+                    }));
+                }
 
 /* 
     joystick.leftTrigger().whileTrue(drivetrain.applyRequest(() -> {
