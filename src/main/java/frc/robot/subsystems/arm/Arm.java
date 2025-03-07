@@ -52,8 +52,8 @@ private final SysIdRoutine m_sysIdRoutine =
 
     var motionMagicConfig =
         new MotionMagicConfigs()
-            .withMotionMagicAcceleration(2)
-            .withMotionMagicCruiseVelocity(1);
+            .withMotionMagicAcceleration(1.6)
+            .withMotionMagicCruiseVelocity(1.7);
 
     var motorOutputConfig =
         new MotorOutputConfigs()

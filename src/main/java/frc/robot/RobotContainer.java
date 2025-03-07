@@ -47,6 +47,8 @@ public class RobotContainer {
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
+  private final SwerveRequest.Idle idle = new SwerveRequest.Idle();
+
 
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -137,10 +139,10 @@ public class RobotContainer {
     // joystick.b().whileTrue(elevator.sysIdDynamic(Direction.kForward));
     // joystick.x().whileTrue(elevator.sysIdDynamic(Direction.kReverse));
     // joystick.y().whileTrue(elevator.sysIdQuasistatic(Direction.kForward));
-    // joystick.a().whileTrue(elevator.sysIdQuasistatic(Direction.kReverse));
+    // joystick.a().whileTrue(elevator.sysIdQuasistatic(Direction.kReverse));return 
 
       // reset the field-centric heading on left bumper press
-    joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+    joystick.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
     // Algae L2 intake
     joystick.a().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 1.5));
@@ -148,34 +150,38 @@ public class RobotContainer {
     // Algae L3 intake
     joystick.y().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 3.0));
 
+    //processor pose
+    joystick.x().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 0.5));
+
     //stop intake
     //joystick.povLeft().onTrue(intake.runIntake(0));
 
     //climb up 
-    joystick.povUp().whileTrue(climber.runClimber(0.3));
+    joystick.povUp().whileTrue(climber.runClimber(1));
 
     //climb down
-    joystick.povDown().whileTrue(climber.runClimber(-0.3));
+    joystick.povDown().whileTrue(climber.runClimber(-1));
 
     //operator bindings
 
     //auto coral intake
     operator.povDown().onTrue(CommandManager.intakeCoral(funnel, intake));
 
-    //hold algae pose
-    operator.povLeft().onTrue(CommandManager.setPositions(arm, elevator, 0.1 , 0.1 ));
+    //move arm for climb
+   // operator.povLeft().onTrue(CommandManager.setPositions(arm, elevator, 0.1 , 0.1 ));
 
-    //pivot funnel for climb 
-    operator.povRight().onTrue(CommandManager.movePivot(funnelPivot));
+    //pivot funnel and arm for climb 
+    operator.povRight().onTrue(CommandManager.climbPose(funnelPivot, arm));
+    
     //score net
     operator.povUp().onTrue(CommandManager.netPosition(elevator, arm));
 
-    // algae intake| coral outtake
+    // algae intake| coral outtake[\]
     operator.rightTrigger().whileTrue(intake.runIntake(-0.6));
 
     
     // hold algae speed
-    operator.a().onTrue(intake.runIntake(-0.5));
+    //operator.a().onTrue(intake.runIntake(-0.5));
 
     //algae outtake
     operator.rightBumper().whileTrue(intake.runIntake(1));
@@ -187,19 +193,21 @@ public class RobotContainer {
     operator.y().onTrue(CommandManager.setPositions(arm, elevator, 0.30 , 2.5));
     
     // Score L4
-    operator.b().onTrue(CommandManager.setPositions(arm, elevator, 0.28 , 5.2)); //0.23 5.1
+    operator.b().onTrue(CommandManager.setPositions(arm, elevator, 0.23 , 5.2)); //0.23 5.1
     
     // default arm (intake position)
     operator.leftBumper().onTrue(CommandManager.defaultArm(arm));
 
     //default elevator w/ arm out of the way
-   operator.leftTrigger().onTrue(CommandManager.setPositions(arm, elevator, 0.25, 0.1));
+   operator.leftTrigger().onTrue(CommandManager.setPositions(arm, elevator, 0.25, 0.045));
     
+
 
 
     // joystick.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
     //joystick.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
     
+
 
     drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -305,7 +313,13 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return 
+    drivetrain.applyRequest(() ->
+      drive.withVelocityX(0.7)
+      .withVelocityY(0)
+     .withRotationalRate(0))
+      .withTimeout(3)
+      .andThen(drivetrain.applyRequest(() -> idle));
   }
 
   double limelightMoveForeward() {

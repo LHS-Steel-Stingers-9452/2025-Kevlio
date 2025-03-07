@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
+
 import edu.wpi.first.epilogue.Epilogue;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.logging.EpilogueBackend;
@@ -15,12 +17,21 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 @Logged
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
+
+  public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+ // private final SwerveRequest.Idle idle = new SwerveRequest.Idle();
+
+  //private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric();
+
 
   public Robot() {
     m_robotContainer = new RobotContainer();
@@ -74,6 +85,17 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
   }
+
+  /*  Command getAutonomousCommand(){
+    return 
+      drivetrain.applyRequest(() ->
+        drive.withVelocityX(0.5)
+        .withVelocityY(0)
+        .withRotationalRate(0))
+        .withTimeout(3)
+        .andThen(drivetrain.applyRequest(() -> idle));
+  }
+  */
 
   @Override
   public void autonomousPeriodic() {}

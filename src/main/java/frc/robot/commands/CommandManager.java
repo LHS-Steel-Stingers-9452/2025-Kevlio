@@ -18,7 +18,7 @@ public class CommandManager {
             //auto intake coral
             return funnel.runFunnel(0.4).alongWith(intake.runIntake(0.2))
                     .until(intake::hasCoral)
-                    .andThen(new WaitCommand(0.15))
+                    .andThen(new WaitCommand(0.10))
                     .andThen(funnel.stopFunnel().alongWith(intake.stopIntake()));
         }
 
@@ -53,7 +53,7 @@ public static Command defaultArm(Arm arm){
 }
 
 public static Command defaultElevator(Elevator elevator){
-    return elevator.setPosition(0.1);
+    return elevator.setPosition(0.05);
   //  .until(()-> elevator.elevatorPosition() <0.2)
     //.andThen(elevator.runElevator(0).withTimeout(0.5));
 }
@@ -68,10 +68,11 @@ public static Command netPosition(Elevator elevator, Arm arm){
      );  
 
 }
-public static Command movePivot(FunnelPivot funnelPivot){
+public static Command climbPose(FunnelPivot funnelPivot, Arm arm){
     return funnelPivot.runPivot(-0.34)
-    .withTimeout(0.5)
-    .andThen(funnelPivot.runPivot(0));
+    .withTimeout(0.6)
+    .andThen(funnelPivot.runPivot(0))
+    .alongWith(arm.setPosition(0.30));
 }
 
 public static Command climberClimb(Climber climber){
