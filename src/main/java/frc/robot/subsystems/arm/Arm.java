@@ -69,15 +69,15 @@ private final SysIdRoutine m_sysIdRoutine =
             .withSupplyCurrentLimitEnable(true);
     var feedbackConfig =
         new FeedbackConfigs()
-            .withSensorToMechanismRatio(18); // 18(gear ratio) * 360(degrees)
+            .withSensorToMechanismRatio(27); // 27(gear ratio) 
     var slot0Config =
         new Slot0Configs()
             .withGravityType(GravityTypeValue.Arm_Cosine)
-            .withKA(0.53584)
-            .withKG(0.397)
+            .withKA(0.12566)
+            .withKG(0.59)
             .withKP(1.6)
             .withKS(0.16558)
-            .withKV(1.6063);
+            .withKV(3.2673);
 
     var talonFXConfig = 
         new TalonFXConfiguration()

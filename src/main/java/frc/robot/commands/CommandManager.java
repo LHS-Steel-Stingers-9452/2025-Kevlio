@@ -45,9 +45,11 @@ public class CommandManager {
     }
 
     public static Command defaultArm(Arm arm){
-        return arm.runArm(0.1)
+       /* return arm.runArm(0.1)
         .until(()-> arm.armPosition() < 0.37 && arm.armPosition() > 0.36)
         .andThen(arm.runArm(0));
+        */
+        return arm.setPosition(0.36);
     }
 
 public static Command defaultElevator(Elevator elevator){
@@ -58,6 +60,7 @@ public static Command defaultElevator(Elevator elevator){
 
     public static Command netPosition(Elevator elevator, Arm arm){
         return elevator.setPosition(5.3)
+        .alongWith(arm.setPosition(0.20))
         .until(()-> elevator.elevatorPosition() > 5.2)
         .andThen(
             elevator.setPosition(6)

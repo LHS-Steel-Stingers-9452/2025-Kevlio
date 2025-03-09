@@ -9,10 +9,12 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentric;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -49,6 +51,8 @@ public class RobotContainer {
 
   private final SwerveRequest.Idle idle = new SwerveRequest.Idle();
 
+   private final SendableChooser<Command> autoChooser;
+
 
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -56,8 +60,9 @@ public class RobotContainer {
 
   private final CommandXboxController operator = new CommandXboxController(1);
 
-  public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+
+  public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
   public final Elevator elevator = new Elevator();
 
@@ -80,6 +85,13 @@ public class RobotContainer {
 
   public RobotContainer() {
     configureBindings();
+
+     autoChooser = AutoBuilder.buildAutoChooser();
+
+    // Another option that allows you to specify the default auto by its name
+    // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void configureBindings() {
@@ -155,7 +167,10 @@ public class RobotContainer {
     joystick.y().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 3.0));
 
     //processor pose
-    joystick.x().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 0.5));
+    joystick.x().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 0.3));
+
+    //processor stow pose
+    joystick.b().onTrue(CommandManager.setPositions(arm, elevator, 0.1, 0.1));
 
     //stop intake
     //joystick.povLeft().onTrue(intake.runIntake(0));
@@ -171,8 +186,6 @@ public class RobotContainer {
     //auto coral intake
     operator.povDown().onTrue(CommandManager.intakeCoral(funnel, intake));
 
-    //move arm for climb
-   // operator.povLeft().onTrue(CommandManager.setPositions(arm, elevator, 0.1 , 0.1 ));
 
     //pivot funnel and arm for climb 
     operator.povRight().onTrue(CommandManager.climbPose(funnelPivot, arm));
@@ -180,7 +193,7 @@ public class RobotContainer {
     //score net
     operator.povUp().onTrue(CommandManager.netPosition(elevator, arm));
 
-    // algae intake| coral outtake[\]
+    // algae intake| coral outtake
     operator.rightTrigger().whileTrue(intake.runIntake(-0.6));
 
     
@@ -259,20 +272,7 @@ public class RobotContainer {
                     }));
                 }
 
-/* 
-    joystick.leftTrigger().whileTrue(drivetrain.applyRequest(() -> {
-        double aprilTagID = limelightMoveForeward();
-        SmartDashboard.putNumber("aprilTagID", aprilTagID);
-        if (aprilTagID==2){
-            return robotRelativeDrive.withVelocityX(MaxSpeed*0.2);
-        }
-        else{
-            return robotRelativeDrive.withVelocityX(0);
-        }
-    }));
-  }
-  */
- 
+
   public void autoInit(){
     drivetrain.seedFieldCentric();
     arm.defaultArmEncoder();
@@ -313,7 +313,7 @@ public class RobotContainer {
     return targetingForwardSpeed;
   }
 
-  public Command getAutonomousCommand() {
+  public Command getTaxiAuto() {
     return 
     drivetrain.applyRequest(() ->
       drive.withVelocityX(0.7)
@@ -321,6 +321,10 @@ public class RobotContainer {
      .withRotationalRate(0))
       .withTimeout(3)
       .andThen(drivetrain.applyRequest(() -> idle));
+  }
+
+  public Command getAutonomousCommand() {
+    return autoChooser.getSelected();
   }
 
   double limelightMoveForeward() {
