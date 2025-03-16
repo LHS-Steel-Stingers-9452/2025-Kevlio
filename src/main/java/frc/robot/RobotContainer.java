@@ -10,6 +10,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentric;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.epilogue.Logged;
@@ -123,6 +124,12 @@ public class RobotContainer {
     SmartDashboard.putData("algae L3", CommandManager.setPositions(arm, elevator, -0.16 , 2.8));
     SmartDashboard.putData("intakeAlgae", intake.runIntake(-0.2));
 
+
+    //named commands
+     NamedCommands.registerCommand("scoreL4", CommandManager.scoreL4(elevator, arm, intake));
+     NamedCommands.registerCommand("defaultPoses", CommandManager.defaultPoses(elevator, arm));
+     
+
     // Note that X is defined as forward according to WPILib convention,
     // and Y is defined as to the left according to WPILib convention.
 
@@ -161,7 +168,7 @@ public class RobotContainer {
     joystick.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
     // Algae L2 intake
-    joystick.a().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 1.5));
+    joystick.a().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 1.8));
 
     // Algae L3 intake
     joystick.y().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 3.0));
@@ -205,12 +212,12 @@ public class RobotContainer {
     
 
     // score L2
-    operator.x().onTrue(CommandManager.setPositions(arm, elevator, 0.30 , 1.0));
+    operator.x().onTrue(CommandManager.setPositions(arm, elevator, 0.34 , 1.15));
     // score L3
-    operator.y().onTrue(CommandManager.setPositions(arm, elevator, 0.30 , 2.5));
+    operator.y().onTrue(CommandManager.setPositions(arm, elevator, 0.30 , 2.7));
     
     // Score L4
-    operator.b().onTrue(CommandManager.setPositions(arm, elevator, 0.23 , 5.2)); //0.23 5.1
+    operator.b().onTrue(CommandManager.setPositions(arm, elevator, 0.213 , 5.3)); //0.23 5.1
     
     // default arm (intake position)
     operator.leftBumper().onTrue(CommandManager.defaultArm(arm));

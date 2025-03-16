@@ -13,7 +13,18 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class CommandManager {
+    //  work in progress (desperately needs some un-.andThen'ining)
+  /*   public static Command coralL4(Arm arm, Elevator elevator,Intake intake){
 
+            return setPositions(arm, elevator, 0.23, 5.2) //All hail the wall of .andThen
+            .andThen(new WaitCommand(3)) //adjust the wait time accordingly
+            .andThen(intake.runIntake(-0.6))
+            .andThen(new WaitCommand(2.5))
+            .andThen(defaultElevator(elevator))
+            .andThen(defaultArm(arm));
+
+    }
+    */
     public static Command intakeCoral(Funnel funnel, Intake intake){
 
             //auto intake coral
@@ -45,33 +56,35 @@ public class CommandManager {
     }
 
     public static Command defaultArm(Arm arm){
-       /* return arm.runArm(0.1)
+        return arm.runArm(0.1)
         .until(()-> arm.armPosition() < 0.37 && arm.armPosition() > 0.36)
         .andThen(arm.runArm(0));
-        */
-        return arm.setPosition(0.36);
+
+        
+       // return arm.setPosition(0.34); //0.365
     }
 
 public static Command defaultElevator(Elevator elevator){
-    return elevator.setPosition(0.05);
+    return elevator.setPosition(0.03);
   //  .until(()-> elevator.elevatorPosition() <0.2)
     //.andThen(elevator.runElevator(0).withTimeout(0.5));
 }
 
     public static Command netPosition(Elevator elevator, Arm arm){
-        return elevator.setPosition(5.3)
-        .alongWith(arm.setPosition(0.20))
-        .until(()-> elevator.elevatorPosition() > 5.2)
+        return elevator.setPosition(5.8)
+        .alongWith(arm.setPosition(0.16))
+        .until(()-> elevator.elevatorPosition() > 5.8)
         .andThen(
             elevator.setPosition(6)
-        .alongWith(arm.setPosition(0.27))
+        .alongWith(arm.setPosition(0.225))
         
         );  
 
 }
+
 public static Command climbPose(FunnelPivot funnelPivot, Arm arm){
     return funnelPivot.runPivot(-0.34)
-    .withTimeout(0.5)
+    .withTimeout(0.44)
     .andThen(funnelPivot.runPivot(0))
     .alongWith(arm.setPosition(0.30));
 }
@@ -81,9 +94,31 @@ public static Command climbPose(FunnelPivot funnelPivot, Arm arm){
         // .finallyDo(climber.stopClimber())
 
     }
-    /* 
-    public static Command dumbAuto(CommandSwerveDrivetrain commandswervedrivetrain){
-        return commandswervedrivetrain.drive
-    }
-    */
+   
+
+    //  autoCommands
+
+   // public static Command L4Pose(Elevator elevator, Arm arm){
+     //   return setPositions(arm, elevator, 0.213, 5.3);
+   // }
+
+    //public static Command scoreCoral(Intake intake){
+
+   // }
+
+    public static Command scoreL4(Elevator elevator, Arm arm, Intake intake){
+        return setPositions(arm, elevator, 0.213, 5.3)
+        .andThen(intake.runIntake(1)
+       .withTimeout(4));
+
+     
+   }
+
+   public static Command defaultPoses(Elevator elevator, Arm arm){
+    return 
+    (setPositions(arm, elevator, 0.25,0.045))
+    .andThen(defaultArm(arm));
+
+   }
+
 }

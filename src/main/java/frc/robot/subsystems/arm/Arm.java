@@ -57,7 +57,7 @@ private final SysIdRoutine m_sysIdRoutine =
 
     var motorOutputConfig =
         new MotorOutputConfigs()
-            .withInverted(InvertedValue.Clockwise_Positive)
+            .withInverted(InvertedValue.CounterClockwise_Positive)
             .withNeutralMode(NeutralModeValue.Brake);
             
 
@@ -73,11 +73,11 @@ private final SysIdRoutine m_sysIdRoutine =
     var slot0Config =
         new Slot0Configs()
             .withGravityType(GravityTypeValue.Arm_Cosine)
-            .withKA(0.12566)
-            .withKG(0.59)
-            .withKP(1.6)
+            .withKA(0.12) //0.12566
+            .withKG(0.40) //0.59, 0.51
+            .withKP(2.2) //1.6
             .withKS(0.16558)
-            .withKV(3.2673);
+            .withKV(3.24); //3.2673
 
     var talonFXConfig = 
         new TalonFXConfiguration()

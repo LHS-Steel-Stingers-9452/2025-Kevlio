@@ -7,8 +7,10 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 
 public class FunnelPivot extends SubsystemBase {
 
@@ -37,6 +39,8 @@ public class FunnelPivot extends SubsystemBase {
         
         pivotKraken.getConfigurator().apply(talonFXConfig);
     }
+
+
    
 
     public Command stopPivot() {
@@ -45,9 +49,22 @@ public class FunnelPivot extends SubsystemBase {
         });
         }
 
+    /* public Command tryPosition(){
+        return runOnce(() -> {
+            pivotKraken.setPosition(-5.0);
+        });
+    }
+    */
+    
     public Command runPivot(double speed){
         return run(() -> {
             pivotKraken.set(speed);
         });
+        }
+
+    @Logged    
+    public double pivotPosition() {
+    return pivotKraken.getPosition().getValueAsDouble();
     }
+
 }
