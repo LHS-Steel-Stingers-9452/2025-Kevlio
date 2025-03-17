@@ -13,25 +13,13 @@
         {
           "type": "named",
           "data": {
-            "name": "ScoreL4"
+            "name": "L4Pose"
           }
         },
         {
           "type": "wait",
           "data": {
             "waitTime": 4.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Leave-D"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "defaultPoses"
           }
         }
       ]

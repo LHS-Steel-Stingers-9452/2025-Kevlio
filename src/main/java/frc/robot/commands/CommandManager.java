@@ -98,13 +98,14 @@ public static Command climbPose(FunnelPivot funnelPivot, Arm arm){
 
     //  autoCommands
 
-   // public static Command L4Pose(Elevator elevator, Arm arm){
-     //   return setPositions(arm, elevator, 0.213, 5.3);
-   // }
+    public static Command L4Pose(Elevator elevator, Arm arm){
+        return setPositions(arm, elevator, 0.213, 5.3);
+    }
 
-    //public static Command scoreCoral(Intake intake){
+  //  public static Command scoreCoral(Intake intake){
+   //     return 
 
-   // }
+    //}
 
     public static Command scoreL4(Elevator elevator, Arm arm, Intake intake){
         return setPositions(arm, elevator, 0.213, 5.3)

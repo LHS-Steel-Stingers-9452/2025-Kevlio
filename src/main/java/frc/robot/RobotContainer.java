@@ -65,17 +65,23 @@ public class RobotContainer {
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-  public final Elevator elevator = new Elevator();
+  //public final Elevator elevator = new Elevator();
+  public final Elevator elevator;
 
-  public final Arm arm = new Arm();
+  //public final Arm arm = new Arm();
+  public final Arm arm;
 
-  public final Intake intake = new Intake();
+  //public final Intake intake = new Intake();
+  public final Intake intake;
 
-  public final Climber climber = new Climber();
+  //public final Climber climber = new Climber();
+ public final Climber climber;
 
-  public final Funnel funnel = new Funnel();
+ // public final Funnel funnel = new Funnel();
+ public final Funnel funnel;
 
-  public final FunnelPivot funnelPivot = new FunnelPivot();
+  //public final FunnelPivot funnelPivot = new FunnelPivot();
+  public final FunnelPivot funnelPivot;
 
   private final SwerveRequest.RobotCentric robotRelativeDrive =
       new SwerveRequest.RobotCentric()
@@ -85,23 +91,41 @@ public class RobotContainer {
               DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
   public RobotContainer() {
-    configureBindings();
+
+    elevator = new Elevator();
+    arm = new Arm();
+    intake = new Intake();
+    climber = new Climber();
+    funnel = new Funnel();
+    funnelPivot = new FunnelPivot();
+
+
+
+     NamedCommands.registerCommand("scoreL4", CommandManager.scoreL4(elevator, arm, intake));
+     NamedCommands.registerCommand("defaultPoses", CommandManager.defaultPoses(elevator, arm));
+     NamedCommands.registerCommand("setL4Pose", CommandManager.L4Pose(elevator, arm));
+
 
      autoChooser = AutoBuilder.buildAutoChooser();
+     SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    // Another option that allows you to specify the default auto by its name
+
+    configureBindings();
+
+        // Another option that allows you to specify the default auto by its name
     // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
 
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    
   }
 
-  private void configureBindings() {
 
+  private void configureBindings() {
+/* 
     SmartDashboard.putData("runArm", arm.runArm(0.1));
     SmartDashboard.putData("runArmBackwards", arm.runArm(-0.1));
     SmartDashboard.putData("stopArm", arm.runArm(0));
     SmartDashboard.putData("zeroArmEncoder", arm.zeroArm());
-    //SmartDashboard.putData("setArmPose", arm.setPosition(0.5));
+    SmartDashboard.putData("setArmPose", arm.setPosition(0.5));
 
     SmartDashboard.putData("setEncoderStowPosition", arm.setArmEncoderStow());
     SmartDashboard.putData("go to zero motion magic", arm.setPosition(0));
@@ -123,11 +147,12 @@ public class RobotContainer {
 
     SmartDashboard.putData("algae L3", CommandManager.setPositions(arm, elevator, -0.16 , 2.8));
     SmartDashboard.putData("intakeAlgae", intake.runIntake(-0.2));
-
+*/
 
     //named commands
      NamedCommands.registerCommand("scoreL4", CommandManager.scoreL4(elevator, arm, intake));
      NamedCommands.registerCommand("defaultPoses", CommandManager.defaultPoses(elevator, arm));
+     NamedCommands.registerCommand("setL4Pose", CommandManager.L4Pose(elevator, arm));
      
 
     // Note that X is defined as forward according to WPILib convention,
@@ -166,6 +191,21 @@ public class RobotContainer {
 
       // reset the field-centric heading on right bumper press // changed 2/25 from left bumper to right bumper
     joystick.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
+
+
+
+
+
+
+
+    //TESTING FOR ED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    joystick.rightTrigger().whileTrue(intake.runIntake(1));
+
+
+
+
+
 
     // Algae L2 intake
     joystick.a().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 1.8));
@@ -257,7 +297,7 @@ public class RobotContainer {
 // vision bindings, for driver
 
     //lock onto april tag
-        joystick
+ /*        joystick
             .rightTrigger()
             .whileTrue(
                 drivetrain.applyRequest(
@@ -277,6 +317,7 @@ public class RobotContainer {
                         .withRotationalRate(
                             rotation); // Drive counterclockwise with negative X (left)
                     }));
+                    */
                 }
 
 
