@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.arm.Arm;
@@ -65,7 +66,7 @@ public class CommandManager {
     }
 
 public static Command defaultElevator(Elevator elevator){
-    return elevator.setPosition(0.03);
+    return elevator.setPosition(0.02);
   //  .until(()-> elevator.elevatorPosition() <0.2)
     //.andThen(elevator.runElevator(0).withTimeout(0.5));
 }
@@ -96,7 +97,7 @@ public static Command climbPose(FunnelPivot funnelPivot, Arm arm){
     }
    
 
-    //  autoCommands
+//  autoCommands
 
     public static Command L4Pose(Elevator elevator, Arm arm){
         return setPositions(arm, elevator, 0.213, 5.3);
@@ -109,10 +110,18 @@ public static Command climbPose(FunnelPivot funnelPivot, Arm arm){
 
     public static Command scoreL4(Elevator elevator, Arm arm, Intake intake){
         return setPositions(arm, elevator, 0.213, 5.3)
-        .andThen(intake.runIntake(1)
-       .withTimeout(4));
+        .until(()-> elevator.elevatorPosition() > 5.25)
+        .andThen((intake.runIntake(1)
+       .withTimeout(4)));
+   }
 
-     
+
+
+   public static Command testElevator(Elevator elevator){
+  return new SequentialCommandGroup(new InstantCommand(() -> elevator.testPosition(5.3)));
+
+
+
    }
 
    public static Command defaultPoses(Elevator elevator, Arm arm){

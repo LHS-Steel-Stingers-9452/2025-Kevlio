@@ -40,6 +40,7 @@ public class RobotContainer {
       RotationsPerSecond.of(0.75)
           .in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
+
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
@@ -47,18 +48,17 @@ public class RobotContainer {
           .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
           .withDriveRequestType(
               DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+
+
+  //private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+ // private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
   private final SwerveRequest.Idle idle = new SwerveRequest.Idle();
 
-   private final SendableChooser<Command> autoChooser;
-
-
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
-  private final CommandXboxController joystick = new CommandXboxController(0);
 
+  private final CommandXboxController joystick = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
 
@@ -75,13 +75,14 @@ public class RobotContainer {
   public final Intake intake;
 
   //public final Climber climber = new Climber();
- public final Climber climber;
+  public final Climber climber;
 
  // public final Funnel funnel = new Funnel();
- public final Funnel funnel;
+  public final Funnel funnel;
 
   //public final FunnelPivot funnelPivot = new FunnelPivot();
   public final FunnelPivot funnelPivot;
+
 
   private final SwerveRequest.RobotCentric robotRelativeDrive =
       new SwerveRequest.RobotCentric()
@@ -90,32 +91,40 @@ public class RobotContainer {
           .withDriveRequestType(
               DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
+
+   private final SendableChooser<Command> autoChooser;
+
+
+
+
   public RobotContainer() {
 
     elevator = new Elevator();
+
     arm = new Arm();
+
     intake = new Intake();
+
     climber = new Climber();
+
     funnel = new Funnel();
+
     funnelPivot = new FunnelPivot();
-
-
-
-     NamedCommands.registerCommand("scoreL4", CommandManager.scoreL4(elevator, arm, intake));
-     NamedCommands.registerCommand("defaultPoses", CommandManager.defaultPoses(elevator, arm));
-     NamedCommands.registerCommand("setL4Pose", CommandManager.L4Pose(elevator, arm));
-
-
-     autoChooser = AutoBuilder.buildAutoChooser();
-     SmartDashboard.putData("Auto Chooser", autoChooser);
-
 
     configureBindings();
 
-        // Another option that allows you to specify the default auto by its name
-    // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
+    //register named commands
+     NamedCommands.registerCommand("scoreL4", CommandManager.scoreL4(elevator, arm, intake));
+     NamedCommands.registerCommand("defaultPoses", CommandManager.defaultPoses(elevator, arm));
+     NamedCommands.registerCommand("setL4Pose", CommandManager.L4Pose(elevator, arm));
+     NamedCommands.registerCommand("print", Commands.runOnce(()-> System.out.println("commandsent")));
 
-    
+
+    // Another option that allows you to specify the default auto by its name
+    // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
+     autoChooser = AutoBuilder.buildAutoChooser();
+     
+     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
 
@@ -149,17 +158,13 @@ public class RobotContainer {
     SmartDashboard.putData("intakeAlgae", intake.runIntake(-0.2));
 */
 
-    //named commands
-     NamedCommands.registerCommand("scoreL4", CommandManager.scoreL4(elevator, arm, intake));
-     NamedCommands.registerCommand("defaultPoses", CommandManager.defaultPoses(elevator, arm));
-     NamedCommands.registerCommand("setL4Pose", CommandManager.L4Pose(elevator, arm));
-     
 
     // Note that X is defined as forward according to WPILib convention,
     // and Y is defined as to the left according to WPILib convention.
 
-//joystick/driver bindings
 
+
+//driver bindings
     drivetrain.setDefaultCommand(
         // Drivetrain will execute this command periodically
         drivetrain.applyRequest(
@@ -176,14 +181,14 @@ public class RobotContainer {
 
         
 
-    joystick
+   /*  joystick
         .b()
         .whileTrue(
             drivetrain.applyRequest(
                 () ->
                     point.withModuleDirection(
                         new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));  
-
+*/
     // joystick.b().whileTrue(elevator.sysIdDynamic(Direction.kForward));
     // joystick.x().whileTrue(elevator.sysIdDynamic(Direction.kReverse));
     // joystick.y().whileTrue(elevator.sysIdQuasistatic(Direction.kForward));
@@ -199,7 +204,7 @@ public class RobotContainer {
 
 
 
-    //TESTING FOR ED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //TESTING FOR EDDIE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     joystick.rightTrigger().whileTrue(intake.runIntake(1));
 
 
@@ -207,17 +212,17 @@ public class RobotContainer {
 
 
 
-    // Algae L2 intake
+    //low algae pose
     joystick.a().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 1.8));
 
-    // Algae L3 intake
+    // high algae pose
     joystick.y().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 3.0));
 
     //processor pose
     joystick.x().onTrue(CommandManager.setPositions(arm, elevator, -0.125, 0.3));
 
-    //processor stow pose
-    joystick.b().onTrue(CommandManager.setPositions(arm, elevator, 0.1, 0.1));
+    //processor stow pose (don't need BUT ynk)
+    //joystick.b().onTrue(CommandManager.setPositions(arm, elevator, 0.1, 0.1));
 
     //stop intake
     //joystick.povLeft().onTrue(intake.runIntake(0));
@@ -228,13 +233,14 @@ public class RobotContainer {
     //climb down
     joystick.povDown().whileTrue(climber.runClimber(-1));
 
+
+
 //operator bindings
 
     //auto coral intake
     operator.povDown().onTrue(CommandManager.intakeCoral(funnel, intake));
 
-
-    //pivot funnel and arm for climb 
+    // move pivot funnel and arm for climb 
     operator.povRight().onTrue(CommandManager.climbPose(funnelPivot, arm));
     
     //score net
@@ -242,10 +248,6 @@ public class RobotContainer {
 
     // algae intake| coral outtake
     operator.rightTrigger().whileTrue(intake.runIntake(-0.6));
-
-    
-    // hold algae speed
-    //operator.a().onTrue(intake.runIntake(-0.5));
 
     //algae outtake
     operator.rightBumper().whileTrue(intake.runIntake(1));
@@ -294,7 +296,7 @@ public class RobotContainer {
                                   
                 ));
 
-// vision bindings, for driver
+// vision bindings, for driver( he doesn't even use it T-T )
 
     //lock onto april tag
  /*        joystick
@@ -361,7 +363,7 @@ public class RobotContainer {
     return targetingForwardSpeed;
   }
 
-  public Command getTaxiAuto() {
+ /*  public Command getTaxiAuto() {
     return 
     drivetrain.applyRequest(() ->
       drive.withVelocityX(0.7)
@@ -370,14 +372,15 @@ public class RobotContainer {
       .withTimeout(3)
       .andThen(drivetrain.applyRequest(() -> idle));
   }
+ */
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
 
-  double limelightMoveForeward() {
-    double tagID = LimelightHelpers.getFiducialID("limelight");
-    return tagID;
+ // double limelightMoveForeward() {
+ //   double tagID = LimelightHelpers.getFiducialID("limelight");
+ //   return tagID;
 
-  }
+ // }
 }

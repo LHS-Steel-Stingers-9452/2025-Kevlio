@@ -118,6 +118,12 @@ private final SysIdRoutine m_sysIdRoutine =
         return m_sysIdRoutine.dynamic(direction);
      }
 
+     //TEST
+     public void testPosition(double pos){
+        motionMagicRequest.withPosition(pos);
+        elevatorKraken.setControl(motionMagicRequest);
+ }
+
 @Logged
 public double elevatorVoltage() {
     return elevatorKraken.getMotorVoltage().getValueAsDouble();
