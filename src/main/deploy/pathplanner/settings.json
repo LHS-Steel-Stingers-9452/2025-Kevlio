@@ -3,12 +3,14 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
+    "HighWallPaths",
     "MiddlePaths",
-    "HighWallPaths"
+    "LowWallPaths"
   ],
   "autoFolders": [
+    "HighWall",
     "Middle",
-    "HighWall"
+    "LowWall"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
