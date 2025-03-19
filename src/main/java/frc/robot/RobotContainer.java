@@ -116,8 +116,9 @@ public class RobotContainer {
     //register named commands
      NamedCommands.registerCommand("scoreL4", CommandManager.scoreL4(elevator, arm, intake));
      NamedCommands.registerCommand("defaultPoses", CommandManager.defaultPoses(elevator, arm));
-     NamedCommands.registerCommand("setL4Pose", CommandManager.L4Pose(elevator, arm));
+     NamedCommands.registerCommand("L4Pose", CommandManager.L4Pose(elevator, arm));
      NamedCommands.registerCommand("print", Commands.runOnce(()-> System.out.println("commandsent")));
+     NamedCommands.registerCommand("score", CommandManager.score(intake));
 
 
     // Another option that allows you to specify the default auto by its name
@@ -171,11 +172,11 @@ public class RobotContainer {
             () ->
                 drive
                     .withVelocityX(
-                        -joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                        - Math.pow(joystick.getLeftY(), 2) * Math.signum(joystick.getLeftY()) * MaxSpeed) // Drive forward with negative Y (forward)
                     .withVelocityY(
-                        -joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        -Math.pow(joystick.getLeftX(), 2) * Math.signum(joystick.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(
-                        -joystick.getRightX()
+                        -Math.pow(joystick.getRightX(), 2) * Math.signum(joystick.getRightX())
                             * MaxAngularRate) // Drive counterclockwise with negative X (left)
             ));
 
@@ -196,19 +197,6 @@ public class RobotContainer {
 
       // reset the field-centric heading on right bumper press // changed 2/25 from left bumper to right bumper
     joystick.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-
-
-
-
-
-
-
-
-    //TESTING FOR EDDIE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    joystick.rightTrigger().whileTrue(intake.runIntake(1));
-
-
-
 
 
 
@@ -265,7 +253,7 @@ public class RobotContainer {
     operator.leftBumper().onTrue(CommandManager.defaultArm(arm));
 
     //default elevator w/ arm out of the way
-   operator.leftTrigger().onTrue(CommandManager.setPositions(arm, elevator, 0.25, 0.045));
+   operator.leftTrigger().onTrue(CommandManager.setPositions(arm, elevator, 0.25, 0.01));
     
 
 

@@ -75,7 +75,7 @@ public class Intake extends SubsystemBase {
     @Logged
     public boolean hasCoral() {
 
-      return getRange()< 0.15;
+      return getRange()< 0.14;
     
     }
     @Logged

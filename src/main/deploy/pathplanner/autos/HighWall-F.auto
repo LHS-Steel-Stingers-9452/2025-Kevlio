@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Mid-2-D-S1"
+            "pathName": "Wall-2-F-S1 "
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Mid-2-D-S2"
+            "pathName": "Wall-2-F-S2"
           }
         },
         {
@@ -32,18 +32,6 @@
           "type": "named",
           "data": {
             "name": "score"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Leave-D"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "defaultPoses"
           }
         }
       ]
