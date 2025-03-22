@@ -85,17 +85,10 @@ public static Command defaultElevator(Elevator elevator){
 
 public static Command climbPose(FunnelPivot funnelPivot, Arm arm){
     return funnelPivot.runPivot(-0.34)
-    .withTimeout(0.45)
+    .withTimeout(0.5)
     .andThen(funnelPivot.runPivot(0))
-    .alongWith(arm.setPosition(0.30));
-}
-
-    public static Command climberClimb(Climber climber){
-        return climber.runClimber(0.1);
-        // .finallyDo(climber.stopClimber())
-
-    }
-   
+    .alongWith(arm.setPosition(-0.125)); //0.30
+}  
 
 //  autoCommands
 
@@ -124,5 +117,19 @@ public static Command climbPose(FunnelPivot funnelPivot, Arm arm){
    // .andThen(defaultArm(arm));
 
    }
+   public static Command climberExtend(Climber climber){
+        return climber.runClimber(1)
+        .until(()-> climber.climberPosition() > 3.5);
+
+   }
+
+   public static Command climberRetract(Climber climber, FunnelPivot funnelPivot){
+    return climber.runClimber(-1)
+    .until(()-> climber.climberPosition() < 0.8)
+    .andThen(funnelPivot.runPivot(0.1)
+    .withTimeout(0.1));
+
+
+}
 
 }

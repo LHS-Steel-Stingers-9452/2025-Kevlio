@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.CommandManager;
@@ -163,6 +164,12 @@ public class RobotContainer {
     // Note that X is defined as forward according to WPILib convention,
     // and Y is defined as to the left according to WPILib convention.
 
+    SmartDashboard.putData("Reset all encoders", new InstantCommand(() -> {
+        arm.defaultArmEncoder();
+        elevator.defaultElevatorEncoder();
+        climber.defaultClimberEncoder();
+    }).ignoringDisable(true));
+
 
 
 //driver bindings
@@ -172,11 +179,11 @@ public class RobotContainer {
             () ->
                 drive
                     .withVelocityX(
-                        - Math.pow(joystick.getLeftY(), 2) * Math.signum(joystick.getLeftY()) * MaxSpeed) // Drive forward with negative Y (forward)
+                        -joystick.getLeftY() * MaxSpeed)  // Drive forward with negative Y (forward)
                     .withVelocityY(
-                        -Math.pow(joystick.getLeftX(), 2) * Math.signum(joystick.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
+                        -joystick.getLeftX() * MaxSpeed)  // Drive left with negative X (left)
                     .withRotationalRate(
-                        -Math.pow(joystick.getRightX(), 2) * Math.signum(joystick.getRightX())
+                        -joystick.getRightX()
                             * MaxAngularRate) // Drive counterclockwise with negative X (left)
             ));
 
@@ -215,11 +222,18 @@ public class RobotContainer {
     //stop intake
     //joystick.povLeft().onTrue(intake.runIntake(0));
 
-    //climb up 
+    //climb up, climber comes out, automatic
+        //joystick.povUp().whileTrue(climber.runClimber(1));
+    joystick.povRight().onTrue(CommandManager.climberExtend(climber));
+
+    //climb down climber comes in
+    joystick.povDown().whileTrue(climber.runClimber(-1));
+
+    // climb up climber comes out, for adjustment
     joystick.povUp().whileTrue(climber.runClimber(1));
 
-    //climb down
-    joystick.povDown().whileTrue(climber.runClimber(-1));
+    // auto climber retract 
+   // joystick.povLeft().onTrue(CommandManager.climberRetract(climber, funnelPivot));
 
 
 
@@ -314,6 +328,7 @@ public class RobotContainer {
   public void autoInit(){
     drivetrain.seedFieldCentric();
     arm.defaultArmEncoder();
+    climber.defaultClimberEncoder();
     elevator.defaultElevatorEncoder();
   }
   // simple proportional turning control with Limelight.

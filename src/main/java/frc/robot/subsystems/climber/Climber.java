@@ -1,6 +1,7 @@
 package frc.robot.subsystems.climber;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -30,10 +31,17 @@ public class Climber extends SubsystemBase {
                 .withStatorCurrentLimitEnable(true)
                 .withSupplyCurrentLimitEnable(true);
 
+        var feedbackConfig =
+            new FeedbackConfigs()
+                .withSensorToMechanismRatio(125);
+
         var talonFXConfig = 
             new TalonFXConfiguration()
             .withCurrentLimits(currentLimitConfig)
-            .withMotorOutput(motorOutputConfig);
+            .withMotorOutput(motorOutputConfig)
+            .withFeedback(feedbackConfig);
+        
+       
             
         
         climberKraken.getConfigurator().apply(talonFXConfig);
@@ -55,8 +63,14 @@ public class Climber extends SubsystemBase {
         });
     }
 
- @Logged
-public double climberPosition() {
-    return climberKraken.getPosition().getValueAsDouble();
-}
+    @Logged
+    public double climberPosition() {
+        return climberKraken.getPosition().getValueAsDouble();
+    }
+
+
+    public void defaultClimberEncoder(){
+        climberKraken.setPosition(0);
+    }
+
 }
