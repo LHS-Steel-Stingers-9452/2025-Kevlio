@@ -60,6 +60,7 @@ public class CommandManager {
         return arm.runArm(0.2)
         .until(()-> arm.armPosition() < 0.37 && arm.armPosition() > 0.36)
         .andThen(arm.runArm(0));
+        // .andThen(arm.setPosition(0.37));
 
         
        // return arm.setPosition(0.34); //0.365
