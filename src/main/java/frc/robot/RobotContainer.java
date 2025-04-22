@@ -264,11 +264,12 @@ public class RobotContainer {
     operator.b().onTrue(CommandManager.setPositions(arm, elevator, 0.213 , 5.3)); //0.23 5.1
     
     // default arm (intake position)
-    operator.leftBumper().onTrue(CommandManager.defaultArm(arm));
+    operator.leftBumper().onTrue(CommandManager.defaultArm(arm, elevator));
 
     //default elevator w/ arm out of the way
    operator.leftTrigger().onTrue(CommandManager.setPositions(arm, elevator, 0.25, 0.01));
     
+
 
 
 

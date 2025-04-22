@@ -56,10 +56,11 @@ public class CommandManager {
         .alongWith(intake.runIntake(0));
     }
 
-    public static Command defaultArm(Arm arm){
+    public static Command defaultArm(Arm arm, Elevator elevator){
         return arm.runArm(0.2)
         .until(()-> arm.armPosition() < 0.37 && arm.armPosition() > 0.36)
-        .andThen(arm.runArm(0));
+        .andThen(arm.runArm(0)
+        .alongWith(elevator.setPosition(0.01)));
         // .andThen(arm.setPosition(0.37));
 
         
